@@ -1,0 +1,119 @@
+https://documentation.wazuh.com/current/user-manual/manager/wazuh-archives.html
+https://documentation.wazuh.com/current/user-manual/manager/manual-integration.html
+
+https://github.com/MyDFIR/SOC-Automation-Project
+________________________________________
+Wazuh Setup && Configuration:Linux     :|
+----------------------------------------
+$ sudo apt-get update
+$ curl -sO https://packages.wazuh.com/4.8/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
+$ sudo tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt
+$ sudo apt-get update
+
+ExtraNote: if u use docker plz following
+https://hub.docker.com/u/wazuh
+
+:Docker installation:
+~~~~~~~~~~~~~~~~~~~~~~
+https://documentation.wazuh.com/current/deployment-options/docker/docker-installation.html
+
+::Wazuh Docker deployment::
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html
+
+____________________
+Wazuh Configuration :|
+====================
+::OSSEC Configuration for all log show in the WAZUH dashboard::
+--------------------------------------------------------------
+$ cp /var/ossec/etc/ossec.conf ~/ossec-backup.conf
+$ sudo nano /var/ossec/etc/ossec.conf
+Section Update:
+<logall>yes</logall>
+$ sudo systemctl restart wazuh-manager.service
+$ cd /var/ossec/logs/archives/
+$ ls
+$ nano /etc/filebeat/filebeat.yml
+Section Update:
+archives:
+enabled: true
+$ sudo systemctl restart wazuh-manager.service >
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Wazuh Deshboard:
+side bar to select > Dashboards Management(Stack Management) > Index patterns > Create index pattern> (Input Index pattern name) wazuh-archives-* > Next > Time field (timestamp) > Create Index pattern
+Step 2:
+side bar to select > Discover > CHANGE INDEX PATTERN drop down arrow (wazuh-alerts*)> wazuh-archives-*
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$ pwd
+/var/ossec/logs/archives/
+$ ls
+$ ls -la
+$ clear
+$ cat archives.json | grep -i mimikatz ## Nothing show
+##go to windows machine and again run mimikatz by powershell
+.\mimikatz.exe
+## And check event viewer log Sysmon by event ID: 1; agent machine mimikatz log generating properly
+$ cat archives.json | grep -i mimikatz ## now showing...
+##go to WAZUH dashboard
+
+side bar > sever management > Rules > Manage rules files
+
+
+_______________________
+Wazuh Agent:Win10     :|
+-----------------------
+@@@@@@Agent Setup@@@@@@
+-----------------------
+PowerShell Script Copy to Wazuh Deshboard!
+~~~~~Sysmon Setup~~~~~~~
+**Download Link Sysmon:
+<<<<<<<<<<>>>>>>>>>>>>>>
+https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+
+**Download sysmonconfig.xml File:
+<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>
+https://github.com/olafhartong/sysmon-modular
+=============================================
+NOTE: powershell open as Administration mood. Sysmon folder location set
+
+.\Sysmon64.exe -i .\sysmonconfig.xml
+
+::mimikatz Setup::
+Download:
+https://github.com/gentilkiwi/mimikatz
+::c:/Download [folder under Exclusions]::
+Open PowerShell under Administrator
+cd [mimikatz folder location]
+.\mimikatz.exe
+
+207a8e9e16b771e2d7140d5cce16a9a13f97dc1308bead888c64aa86fdb96e4e
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+:|Wazuh serverIntegration with third-party APIs:|
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+https://documentation.wazuh.com/current/user-manual/manager/manual-integration.html
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+:|Detecting and removing malware using VirusTotal integration:|
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+https://documentation.wazuh.com/current/proof-of-concept-guide/detect-remove-malware-virustotal.html
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Wazuh and MISP API integration :|ExtraLink:https://medium.com/@AdonayT/1-misp-overview-a0b79d683234
+https://www.youtube.com/watch?v=sIHTRIwF-Mk&pp=ygUSaW5zdGFsbCBtaXNwIGthbGkg
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Link:: 
+https://misp.github.io/MISP/
+https://opensecure.medium.com/wazuh-and-misp-integration-242dfa2f2e19
+_____________________________________________________________________
+installation:
+wget --no-cache -O /tmp/INSTALL.sh https://raw.githubusercontent.com/MISP/MISP/2.4/INSTALL/INSTALL.sh
+
+bash /tmp/INSTALL.sh
+
+Enrich Wazuh Alerts with MISP
+Steps:
+• Custom-MISP.py Script
+• Set custom options into script
+• Add Integration Block To Wazuh's ossec.conf
+• Add MISP custom rules
+
+
